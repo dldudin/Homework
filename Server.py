@@ -46,13 +46,16 @@ class ClientProtocol(asyncio.Protocol):
                 client.transport.write(encoded)
 
     def send_history(self):
-        if len(self.server.chat_history)>10:
-            self.transport.write("Показаны последние 10 сообщений чата \n".encode())
+
+        if len(self.server.chat_history) > 10:
+            self.transport.write("Показаны последние 10 сообщений чата: \n".encode())
             last_ten_message = self.server.chat_history[-1:len(self.server.chat_history)-11:-1]
             for message in last_ten_message:
                 self.transport.write(f"{message} \n".encode())
+        elif len(self.server.chat_history) == 0:
+                self.transport.write("На данный момент в чате нет ни одного сообщения. \n".encode())
         else:
-            self.transport.write("Показаны все сообщения чата на данный момент \n".encode())
+            self.transport.write("Показаны все сообщения чата на данный момент: \n".encode())
             for message in self.server.chat_history:
                 self.transport.write(f"{message} \n".encode())
 
